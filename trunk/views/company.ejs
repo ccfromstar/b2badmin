@@ -1,0 +1,118 @@
+<script>
+    var _tablename = "company";
+    $("#collapse8").attr("class","panel-collapse collapse in");
+    $("#collapse1_all").attr("class","panel-collapse collapse in");
+    function _newForm(){
+        if($("#ship_id").val()==""){
+            balert("请选择邮轮！");
+            return false;
+        }
+        if($("#txtCabinType").val()=="-"){
+            balert("请选择舱房类型！");
+            return false;
+        }
+        if($("#txtCabinNo").val()==""){
+            balert("舱房编号不能为空！");
+            return false;
+        }
+        if($("#txtCabinName").val()==""){
+            balert("舱房名称不能为空！");
+            return false;
+        }
+    	$.ajax({ type:"POST" , url: _tablename+"/insert", data:{
+    			ship_id:$("#ship_id").val(),
+    			txtShipNo:$("#txtShipNo").val(),
+    			txtCabinNo:$("#txtCabinNo").val(),
+    			txtCabinName:$("#txtCabinName").val(),
+    			txtCabinType:$("#txtCabinType").val(),
+    			numCanCheckIn:$("#numCanCheckIn").val()
+    			}, success: function(data){
+    				if(data==200){
+                        balert("新建成功！");
+            			$('#addModal').modal('hide');
+            			$("#refresh").trigger("click");
+    				}
+        }});
+    }
+    function _getShipOption(){
+        $.ajax({ url: _tablename+"/_getShipOption", success: function(data){
+            $("#txtShip").html(data);
+        }});
+    }
+    function setship(str1){
+        var tmp = str1.split("@");
+        $("#ship_id").val(tmp[0]);
+        $("#txtShipNo").val(tmp[1]);
+    }
+</script>
+
+<div class="modal fade" data-backdrop="static" id="addModal" tabindex="-1" role="dialog" 
+   aria-labelledby="myModalLabel2" aria-hidden="true">
+   <div class="modal-dialog" id="_dialogstyle" style="width:600px">
+      <div class="modal-content">
+         <div class="modal-header">
+            <button type="button" class="close" 
+               data-dismiss="modal" aria-hidden="true">
+                  &times;
+            </button>
+            <div class="modal-title" id="myModalLabel">新建舱房</div>
+         </div>
+         <div class="modal-body">
+             <table class="table table-bordered">
+             	<tr>
+             		<td>邮轮</td>
+             		<td><select id="txtShip" onchange="setship(this.value)" class="input-sm selectpicker"></select></td>
+             	</tr>	
+                <tr>
+                    <td>邮轮ID</td>
+                    <td><input type="text" class="input-sm form-control" id="ship_id"  disabled ></input></td>
+                </tr>
+                <tr>
+                    <td>邮轮编号</td>
+                    <td><input type="text" class="input-sm form-control" id="txtShipNo"  disabled ></input></td>
+                </tr>
+                <tr>
+                    <td>舱房编号</td>
+                    <td><input type="text" class="input-sm form-control" id="txtCabinNo"></input></td>
+                </tr>
+             	<tr>
+             		<td>舱房名称</td>
+             		<td><input type="text" class="input-sm form-control" id="txtCabinName"></input></td>
+             	</tr>
+             	<tr>
+             		<td>舱房类型</td>
+             		<td>
+             			<select id="txtCabinType" class="input-sm selectpicker">
+                            <option value="-">请选择</option>
+             				<option value="内舱房">内舱房</option>
+             				<option value="海景房">海景房</option>
+                            <option value="阳台房">阳台房</option>
+                            <option value="套房">套房</option>
+                            <option value="皇家大道景观房">皇家大道景观房</option>
+             			</select>
+             		</td>
+             	</tr>
+                <tr>
+                    <td>最大可入住人数</td>
+                    <td><input type="number" style="width:50px" value="0" class="input-sm form-control" id="numCanCheckIn" ></input></td>
+                </tr>
+             	<tr style="display:none">
+             		<td>录入人ID</td>
+             		<td><input type="text" class="input-sm form-control" id="n_user_id"  disabled ></input></td>
+             	</tr>
+             	<tr style="display:none">
+             		<td>时间</td>
+             		<td><input type="text" class="input-sm form-control" id="n_time" disabled ></input></td>
+             	</tr>
+             </table>
+         </div>
+         <div class="modal-footer" id="_footer">
+         	<button type="button" class="btn btn-default btn-xs" onclick="_newForm()">提交
+            </button>
+            <button type="button" class="btn btn-default btn-xs" 
+               data-dismiss="modal">关闭
+            </button>
+         </div>
+      </div><!-- /.modal-content -->
+    </div>
+</div><!-- /.modal -->

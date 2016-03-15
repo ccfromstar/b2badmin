@@ -1,0 +1,63 @@
+<script>
+
+    var _tablename = "visits";
+    $("#collapse4").attr("class","panel-collapse collapse in");
+    $("#collapse7_all").attr("class","panel-collapse collapse in");
+    $("#viewtable").html("");
+
+    function createV() {
+        $.ajax({ type:"POST" , url: _tablename+"/getB2Clog", success: function(data){
+            _createViews(data);
+        }});
+        $.ajax({ type:"POST" , url: _tablename+"/getB2Blog", success: function(data){
+            _createViews1(data);
+        }});
+        $.ajax({ type:"POST" , url: _tablename+"/getB2Bplog", success: function(data){
+            _createViews2(data);
+        }});
+    }
+
+    function _createViews(data) {
+        var _view = new EJS({url: 'view/visits/B2Cvisits.ejs'}).render({log:data});
+        $("#b2c-view").html(_view);
+    }
+
+    function _createViews1(data) {
+        var _view = new EJS({url: 'view/visits/B2Bvisits.ejs'}).render({log:data});
+        $("#b2b-view").html(_view);
+    }
+
+    function _createViews2(data) {
+        var _view = new EJS({url: 'view/visits/B2Bpvisits.ejs'}).render({log:data});
+        $("#b2bp-view").html(_view);
+    }
+   
+</script>
+
+ <ul class='nav nav-tabs'>
+    <li class='active'><a href='#p1' data-toggle='tab'>B2B 买家访问统计</a></li>
+    <li><a href='#p2' data-toggle='tab' >B2C IP访问量Top 10</a></li>
+    <li><a href='#p3' data-toggle='tab' >B2B 产品访问量Top 10</a></li>
+  </ul>
+  <div class='tab-content'>
+    <div style='padding-top:10px;max-height:2500px;overflow:auto' class='tab-pane fade in active' id='p1'>
+        <div id="b2b-view">
+            <span class='glyphicon glyphicon-refresh' style='margin-right:5px'></span>数据加载中
+        </div>
+    </div>
+    <div style='padding-top:10px;max-height:1000px;overflow:auto' class='tab-pane fade' id='p2'>
+        <div id="b2c-view">
+            <span class='glyphicon glyphicon-refresh' style='margin-right:5px'></span>数据加载中
+        </div>
+    </div>
+    <div style='padding-top:10px;max-height:1000px;overflow:auto' class='tab-pane fade' id='p3'>
+        <div id="b2bp-view">
+            <span class='glyphicon glyphicon-refresh' style='margin-right:5px'></span>数据加载中
+        </div>
+    </div>
+  </div>
+
+
+
+
+

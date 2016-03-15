@@ -1,0 +1,153 @@
+<script>
+    var _tablename = "sysupdate";
+    $("#collapse20").attr("class","panel-collapse collapse in");
+    $("#collapse9_all").attr("class","panel-collapse collapse in");
+
+    function _newForm(){
+        $.ajax({ type:"POST" , url: _tablename+"/insert", data:{
+                col0:$("#col0").val(),
+                col1:$("#col1").val(),
+                user_id:$("#n_user_id").val(),
+                }, success: function(data){
+                    if(data==200){
+                        $("#content_info").html("新建成功！");
+                        $('#infoModal').modal('show');
+                        $('#addModal').modal('hide');
+                        $("#refresh").trigger("click");
+                    }
+        }});
+    }
+
+    function _newForm1(){
+    	$.ajax({ type:"POST" , url: _tablename+"/updateRecord", data:{
+                col0:$("#coln0").val(),
+                col1:$("#coln1").val(),
+                user_id:$("#n_user_id1").val(),
+                id:$("#n_id1").val()
+    			}, success: function(data){
+    				if(data==200){
+    					$("#content_info").html("更新成功！");
+            			$('#infoModal').modal('show');
+            			$('#editModal').modal('hide');
+            			$("#refresh").trigger("click");
+    				}
+        }});
+    }
+
+    function delinfo(id){
+      $.ajax({ type:"POST" , url: _tablename+"/delinfo", data:{id:id}, success: function(data){
+        if(data==200){
+              var bln1 = window.confirm("是否确认删除？");
+              if(bln1 == false){return false;}
+              $("#content_info").html("删除成功！");
+              $('#infoModal').modal('show');
+              $("#refresh").trigger("click");      
+        }
+      }});
+    }
+
+    function editinfo(id){
+        //根据id读取字段
+        $.ajax({ type:"POST" , url: _tablename+"/getinfo", data:{id:id}, success: function(data){
+               $("#coln0").val(data[0].time); 
+               $("#coln1").val(data[0].text); 
+               $("#n_id1").val(id);
+        }});
+        $('#editModal').modal('show');
+    }
+</script>
+
+<div class="modal fade" data-backdrop="static" id="addModal" tabindex="-1" role="dialog" 
+   aria-labelledby="myModalLabel2" aria-hidden="true">
+   <div class="modal-dialog" id="_dialogstyle" style="width:600px">
+      <div class="modal-content">
+         <div class="modal-header">
+            <button type="button" class="close" 
+               data-dismiss="modal" aria-hidden="true">
+                  &times;
+            </button>
+            <div class="modal-title" id="myModalLabel">新建</div>
+         </div>
+         <div class="modal-body">
+             <table class="table table-bordered">
+                
+                <tr>
+                    <td>更新日期</td>
+                    <td>
+                      <input type="text" id="col0" style="cursor:pointer" readonly  class="Wdate" onfocus="WdatePicker({doubleCalendar:false,dateFmt:'yyyy-MM-dd'})"></input>
+                    </td>
+                </tr>
+                <tr>
+                    <td>内容</td>
+                    <td><textarea id="col1" style="width:100%;height:100px"></textarea></td>
+                </tr>
+                <tr style="display:none">
+                    <td>录入人ID</td>
+                    <td><input type="text" class="input-sm form-control" id="n_user_id"  disabled ></input></td>
+                </tr>
+                <tr style="display:none">
+                    <td>时间</td>
+                    <td><input type="text" class="input-sm form-control" id="n_time" disabled ></input></td>
+                </tr>
+             </table>
+         </div>
+         <div class="modal-footer" id="_footer">
+            <button type="button" class="btn btn-default btn-xs" onclick="_newForm()">提交
+            </button>
+            <button type="button" class="btn btn-default btn-xs" 
+               data-dismiss="modal">关闭
+            </button>
+         </div>
+      </div><!-- /.modal-content -->
+    </div>
+</div><!-- /.modal -->
+
+
+
+<div class="modal fade" data-backdrop="static" id="editModal" tabindex="-1" role="dialog" 
+   aria-labelledby="myModalLabel2" aria-hidden="true">
+   <div class="modal-dialog" id="_dialogstyle" style="width:600px">
+      <div class="modal-content">
+         <div class="modal-header">
+            <button type="button" class="close" 
+               data-dismiss="modal" aria-hidden="true">
+                  &times;
+            </button>
+            <div class="modal-title" id="myModalLabel">编辑</div>
+         </div>
+         <div class="modal-body">
+             <table class="table table-bordered">
+                 <tr>
+                    <td>更新日期</td>
+                    <td>
+                      <input type="text" id="coln0" style="cursor:pointer" readonly  class="Wdate" onfocus="WdatePicker({doubleCalendar:false,dateFmt:'yyyy-MM-dd'})"></input>
+                    </td>
+                </tr>
+                <tr>
+                    <td>内容</td>
+                    <td><textarea id="coln1" style="width:100%;height:100px"></textarea></td>
+                </tr>
+                <tr style="display:none">
+                    <td>录入人ID</td>
+                    <td><input type="text" class="input-sm form-control" id="n_user_id1"  disabled ></input></td>
+                </tr>
+                <tr style="display:none">
+                    <td>时间</td>
+                    <td><input type="text" class="input-sm form-control" id="n_time1" disabled ></input></td>
+                </tr>
+                <tr style="display:none">
+                    <td></td>
+                    <td><input type="text" class="input-sm form-control" id="n_id1" disabled ></input></td>
+                </tr>
+             </table>
+         </div>
+         <div class="modal-footer" id="_footer">
+            <button type="button" class="btn btn-default btn-xs" onclick="_newForm1()">提交
+            </button>
+            <button type="button" class="btn btn-default btn-xs" 
+               data-dismiss="modal">关闭
+            </button>
+         </div>
+      </div><!-- /.modal-content -->
+    </div>
+</div><!-- /.modal -->

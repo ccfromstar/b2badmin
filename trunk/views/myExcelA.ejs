@@ -1,0 +1,433 @@
+<script>
+    var _tablename = "myexcela";
+    $("#collapse16").attr("class","panel-collapse collapse in");
+    $("#collapse1_all").attr("class","panel-collapse collapse in");
+
+    function _newForm(){
+        $.ajax({ type:"POST" , url: "myexcela/insert", data:{
+                col0:$("#col0").val(),
+                col1:$("#col1").val(),
+                col2:$("#col2").val(),
+                col3:$("#col3").val(),
+                col4:$("#col4").val(),
+                col5:$("#col5").val(),
+                col6:$("#col6").val(),
+                col7:$("#col7").val(),
+                col8:$("#col8").val(),
+                col9:$("#col9").val(),
+                col10:$("#col10").val(),
+                col11:$("#col11").val(),
+                col12:$("#col12").val(),
+                col13:$("#col13").val(),
+                col14:$("#col14").val(),
+                col15:$("#col15").val(),
+                col16:$("#col16").val(),
+                col17:$("#col17").val(),
+                col18:$("#col18").val(),
+                col19:$("#col19").val(),
+                col20:$("#col20").val(),
+                col21:$("#col21").val(),
+                col22:$("#col22").val(),
+                col23:$("#col23").val(),
+                col24:$("#col24").val(),
+                col25:$("#col25").val(),
+                col26:$("#col26").val(),
+                col27:$("#col27").val(),
+                user_id:$("#n_user_id").val(),
+                }, success: function(data){
+                    if(data==200){
+                        $("#content_info").html("新建成功！");
+                        //清空原来填写过的值
+                        for(var i=0;i<28;i++){
+                          $("#col"+i).val("");
+                        }
+                        $('#infoModal').modal('show');
+                        $('#addModal').modal('hide');
+                        $("#refresh").trigger("click");
+                    }
+        }});
+    }
+
+    function _newForm1(){
+    	$.ajax({ type:"POST" , url: _tablename+"/updateRecord", data:{
+    			col0:$("#coln0").val(),
+                col1:$("#coln1").val(),
+                col2:$("#coln2").val(),
+                col3:$("#coln3").val(),
+                col4:$("#coln4").val(),
+                col5:$("#coln5").val(),
+                col6:$("#coln6").val(),
+                col7:$("#coln7").val(),
+                col8:$("#coln8").val(),
+                col9:$("#coln9").val(),
+                col10:$("#coln10").val(),
+                col11:$("#coln11").val(),
+                col12:$("#coln12").val(),
+                col13:$("#coln13").val(),
+                col14:$("#coln14").val(),
+                col15:$("#coln15").val(),
+                col16:$("#coln16").val(),
+                col17:$("#coln17").val(),
+                col18:$("#coln18").val(),
+                col19:$("#coln19").val(),
+                col20:$("#coln20").val(),
+                col21:$("#coln21").val(),
+                col22:$("#coln22").val(),
+                col23:$("#coln23").val(),
+                col24:$("#coln24").val(),
+                col25:$("#coln25").val(),
+                col26:$("#coln26").val(),
+                col27:$("#coln27").val(),
+                user_id:$("#n_user_id1").val(),
+                id:$("#n_id1").val()
+    			}, success: function(data){
+    				if(data==200){
+    					$("#content_info").html("更新成功！");
+            			$('#infoModal').modal('show');
+            			$('#editModal').modal('hide');
+            			$("#refresh").trigger("click");
+    				}
+        }});
+    }
+
+    function delinfo(id){
+      $.ajax({ type:"POST" , url: _tablename+"/delinfo", data:{id:id}, success: function(data){
+        if(data==200){
+                  $("#content_info").html("删除成功！");
+                  $('#infoModal').modal('show');
+                  $("#refresh").trigger("click");
+        }
+      }});
+    }
+
+    function editinfo(id){
+        //根据id读取字段
+        $.ajax({ type:"POST" , url: _tablename+"/getinfo", data:{id:id}, success: function(data){
+               $("#coln0").val(data[0].col0); 
+               $("#coln1").val(data[0].col1); 
+               $("#coln2").val(data[0].col2); 
+               $("#coln3").val(data[0].col3); 
+               $("#coln4").val(data[0].col4); 
+               $("#coln5").val(data[0].col5); 
+               $("#coln6").val(data[0].col6); 
+               $("#coln7").val(data[0].col7); 
+               $("#coln8").val(data[0].col8); 
+               $("#coln9").val(data[0].col9); 
+               $("#coln10").val(data[0].col10); 
+               $("#coln11").val(data[0].col11); 
+               $("#coln12").val(data[0].col12); 
+               $("#coln13").val(data[0].col13); 
+               $("#coln14").val(data[0].col14);
+               $("#coln15").val(data[0].col15);
+               $("#coln16").val(data[0].col16);
+               $("#coln17").val(data[0].col17);
+               $("#coln18").val(data[0].col18);
+               $("#coln19").val(data[0].col19);
+               $("#coln20").val(data[0].col20);
+               $("#coln21").val(data[0].col21);
+               $("#coln22").val(data[0].col22);
+               $("#coln23").val(data[0].col23);
+               $("#coln24").val(data[0].col24);
+               $("#coln25").val(data[0].col25);
+               $("#coln26").val(data[0].col26);
+               $("#coln27").val(data[0].col27);
+               $("#n_user_id1").val(data[0].user_id);
+               $("#n_id1").val(id);
+        }});
+        $('#editModal').modal('show');
+    }
+</script>
+
+<div class="modal fade" data-backdrop="static" id="addModal" tabindex="-1" role="dialog" 
+   aria-labelledby="myModalLabel2" aria-hidden="true">
+   <div class="modal-dialog" id="_dialogstyle" style="width:900px">
+      <div class="modal-content">
+         <div class="modal-header">
+            <button type="button" class="close" 
+               data-dismiss="modal" aria-hidden="true">
+                  &times;
+            </button>
+            <div class="modal-title" id="myModalLabel">新建</div>
+         </div>
+         <div class="modal-body">
+             <table class="table table-bordered">
+                <tr>
+                    <td >日期</td>
+                    <td style="width:700px"><input type="text" class="input-sm form-control" id="col0"></input></td>
+                </tr>   
+                <tr>
+                    <td>状态</td>
+                    <td><input type="text" class="input-sm form-control" id="col1"></input></td>
+                </tr>
+                <tr>
+                    <td>沟通情况备注</td>
+                    <td><input type="text" class="input-sm form-control" id="col2"></input></td>
+                </tr>
+                <tr>
+                    <td>是否通过平台下单</td>
+                    <td><input type="text" class="input-sm form-control" id="col3"></input></td>
+                </tr>
+                <tr>
+                    <td>团号</td>
+                    <td><input type="text" class="input-sm form-control" id="col4"></input></td>
+                </tr>
+                <tr>
+                    <td>渠道</td>
+                    <td><input type="text" class="input-sm form-control" id="col5"></input></td>
+                </tr>
+                <tr>
+                    <td>客户来源</td>
+                    <td><input type="text" class="input-sm form-control" id="col6"></input></td>
+                </tr>
+                <tr>
+                    <td>客户姓名（必填）</td>
+                    <td><input type="text" class="input-sm form-control" id="col7"></input></td>
+                </tr>
+                <tr>
+                    <td>联系电话（必填）</td>
+                    <td><input type="text" class="input-sm form-control" id="col8"></input></td>
+                </tr>
+                <tr>
+                    <td>性别</td>
+                    <td><input type="text" class="input-sm form-control" id="col9"></input></td>
+                </tr>
+                <tr>
+                    <td>游客信息</td>
+                    <td><input type="text" class="input-sm form-control" id="col10"></input></td>
+                </tr>
+                <tr>
+                    <td>航次</td>
+                    <td><input type="text" class="input-sm form-control" id="col11"></input></td>
+                </tr>
+                <tr>
+                    <td>产品类型（代服务/自营）</td>
+                    <td><input type="text" class="input-sm form-control" id="col12"></input></td>
+                </tr>
+                <tr>
+                    <td>平台订单号</td>
+                    <td><input type="text" class="input-sm form-control" id="col13"></input></td>
+                </tr>
+                 <tr>
+                    <td>邮轮公司</td>
+                    <td><input type="text" class="input-sm form-control" id="col14"></input></td>
+                </tr>
+                 <tr>
+                    <td>人次</td>
+                    <td><input type="text" class="input-sm form-control" id="col15"></input></td>
+                </tr>
+                 <tr>
+                    <td>房间数量</td>
+                    <td><input type="text" class="input-sm form-control" id="col16"></input></td>
+                </tr>
+                 <tr>
+                    <td>舱房类型</td>
+                    <td><input type="text" class="input-sm form-control" id="col17"></input></td>
+                </tr>
+                 <tr>
+                    <td>报价</td>
+                    <td><input type="text" class="input-sm form-control" id="col18"></input></td>
+                </tr>
+                 <tr>
+                    <td>订单要求</td>
+                    <td><input type="text" class="input-sm form-control" id="col19"></input></td>
+                </tr>
+                 <tr>
+                    <td>底价</td>
+                    <td><input type="text" class="input-sm form-control" id="col20"></input></td>
+                </tr>
+                 <tr>
+                    <td>总金额</td>
+                    <td><input type="text" class="input-sm form-control" id="col21"></input></td>
+                </tr>
+                 <tr>
+                    <td>利润</td>
+                    <td><input type="text" class="input-sm form-control" id="col22"></input></td>
+                </tr>
+                 <tr>
+                    <td>供应商</td>
+                    <td><input type="text" class="input-sm form-control" id="col23"></input></td>
+                </tr>
+                 <tr>
+                    <td>付款给供应商</td>
+                    <td><input type="text" class="input-sm form-control" id="col24"></input></td>
+                </tr>
+                 <tr>
+                    <td>客户进款</td>
+                    <td><input type="text" class="input-sm form-control" id="col25"></input></td>
+                </tr>
+                 <tr>
+                    <td>是否开发票</td>
+                    <td><input type="text" class="input-sm form-control" id="col26"></input></td>
+                </tr>
+                 <tr>
+                    <td>备注</td>
+                    <td><input type="text" class="input-sm form-control" id="col27"></input></td>
+                </tr>
+                <tr>
+                    <td>录入人ID</td>
+                    <td><input type="text" class="input-sm form-control" id="n_user_id"  disabled ></input></td>
+                </tr>
+                <tr>
+                    <td>时间</td>
+                    <td><input type="text" class="input-sm form-control" id="n_time" disabled ></input></td>
+                </tr>
+             </table>
+         </div>
+         <div class="modal-footer" id="_footer">
+            <button type="button" class="btn btn-default btn-xs" onclick="_newForm()">提交
+            </button>
+            <button type="button" class="btn btn-default btn-xs" 
+               data-dismiss="modal">关闭
+            </button>
+         </div>
+      </div><!-- /.modal-content -->
+    </div>
+</div><!-- /.modal -->
+
+
+
+<div class="modal fade" data-backdrop="static" id="editModal" tabindex="-1" role="dialog" 
+   aria-labelledby="myModalLabel2" aria-hidden="true">
+   <div class="modal-dialog" id="_dialogstyle" style="width:900px">
+      <div class="modal-content">
+         <div class="modal-header">
+            <button type="button" class="close" 
+               data-dismiss="modal" aria-hidden="true">
+                  &times;
+            </button>
+            <div class="modal-title" id="myModalLabel">编辑</div>
+         </div>
+         <div class="modal-body">
+             <table class="table table-bordered">
+                <tr>
+                    <td >日期</td>
+                    <td style="width:700px"><input type="text" class="input-sm form-control" id="coln0"></input></td>
+                </tr>   
+                <tr>
+                    <td>状态</td>
+                    <td><input type="text" class="input-sm form-control" id="coln1"></input></td>
+                </tr>
+                <tr>
+                    <td>沟通情况备注</td>
+                    <td><input type="text" class="input-sm form-control" id="coln2"></input></td>
+                </tr>
+                <tr>
+                    <td>是否通过平台下单</td>
+                    <td><input type="text" class="input-sm form-control" id="coln3"></input></td>
+                </tr>
+                <tr>
+                    <td>团号</td>
+                    <td><input type="text" class="input-sm form-control" id="coln4"></input></td>
+                </tr>
+                <tr>
+                    <td>渠道</td>
+                    <td><input type="text" class="input-sm form-control" id="coln5"></input></td>
+                </tr>
+                <tr>
+                    <td>客户来源</td>
+                    <td><input type="text" class="input-sm form-control" id="coln6"></input></td>
+                </tr>
+                <tr>
+                    <td>客户姓名（必填）</td>
+                    <td><input type="text" class="input-sm form-control" id="coln7"></input></td>
+                </tr>
+                <tr>
+                    <td>联系电话（必填）</td>
+                    <td><input type="text" class="input-sm form-control" id="coln8"></input></td>
+                </tr>
+                <tr>
+                    <td>性别</td>
+                    <td><input type="text" class="input-sm form-control" id="coln9"></input></td>
+                </tr>
+                <tr>
+                    <td>游客信息</td>
+                    <td><input type="text" class="input-sm form-control" id="coln10"></input></td>
+                </tr>
+                <tr>
+                    <td>航次</td>
+                    <td><input type="text" class="input-sm form-control" id="coln11"></input></td>
+                </tr>
+                <tr>
+                    <td>产品类型（代服务/自营）</td>
+                    <td><input type="text" class="input-sm form-control" id="coln12"></input></td>
+                </tr>
+                <tr>
+                    <td>平台订单号</td>
+                    <td><input type="text" class="input-sm form-control" id="coln13"></input></td>
+                </tr>
+                 <tr>
+                    <td>邮轮公司</td>
+                    <td><input type="text" class="input-sm form-control" id="coln14"></input></td>
+                </tr>
+                 <tr>
+                    <td>人次</td>
+                    <td><input type="text" class="input-sm form-control" id="coln15"></input></td>
+                </tr>
+                 <tr>
+                    <td>房间数量</td>
+                    <td><input type="text" class="input-sm form-control" id="coln16"></input></td>
+                </tr>
+                 <tr>
+                    <td>舱房类型</td>
+                    <td><input type="text" class="input-sm form-control" id="coln17"></input></td>
+                </tr>
+                 <tr>
+                    <td>报价</td>
+                    <td><input type="text" class="input-sm form-control" id="coln18"></input></td>
+                </tr>
+                 <tr>
+                    <td>订单要求</td>
+                    <td><input type="text" class="input-sm form-control" id="coln19"></input></td>
+                </tr>
+                 <tr>
+                    <td>底价</td>
+                    <td><input type="text" class="input-sm form-control" id="coln20"></input></td>
+                </tr>
+                 <tr>
+                    <td>总金额</td>
+                    <td><input type="text" class="input-sm form-control" id="coln21"></input></td>
+                </tr>
+                 <tr>
+                    <td>利润</td>
+                    <td><input type="text" class="input-sm form-control" id="coln22"></input></td>
+                </tr>
+                 <tr>
+                    <td>供应商</td>
+                    <td><input type="text" class="input-sm form-control" id="coln23"></input></td>
+                </tr>
+                 <tr>
+                    <td>付款给供应商</td>
+                    <td><input type="text" class="input-sm form-control" id="coln24"></input></td>
+                </tr>
+                 <tr>
+                    <td>客户进款</td>
+                    <td><input type="text" class="input-sm form-control" id="coln25"></input></td>
+                </tr>
+                 <tr>
+                    <td>是否开发票</td>
+                    <td><input type="text" class="input-sm form-control" id="coln26"></input></td>
+                </tr>
+                 <tr>
+                    <td>备注</td>
+                    <td><input type="text" class="input-sm form-control" id="coln27"></input></td>
+                </tr>
+                <tr>
+                    <td>录入人ID</td>
+                    <td><input type="text" class="input-sm form-control" id="n_user_id1"  disabled ></input></td>
+                </tr>
+                <tr style="display:none">
+                    <td></td>
+                    <td><input type="text" class="input-sm form-control" id="n_id1" disabled ></input></td>
+                </tr>
+             </table>
+         </div>
+         <div class="modal-footer" id="_footer">
+            <button type="button" class="btn btn-default btn-xs" onclick="_newForm1()">提交
+            </button>
+            <button type="button" class="btn btn-default btn-xs" 
+               data-dismiss="modal">关闭
+            </button>
+         </div>
+      </div><!-- /.modal-content -->
+    </div>
+</div><!-- /.modal -->

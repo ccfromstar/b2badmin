@@ -1,0 +1,205 @@
+<div class="form-group" style="float:left">
+  <label>短信内容：<span style="color:red">(短信内容不可大于260字)</span>&nbsp; &nbsp; &nbsp; &nbsp;<span>还剩余<b style="color:red" id="b">260</b>个字</span>
+  </label>
+  <textarea class="input-sm form-control" id="_content" rows="3" onkeydown="constraintNumber(this.value)" onkeyup="constraintNumber(this.value)" onblur="constraintNumber(this.value)" onfocus="constraintNumber(this.value)" onchange="constraintNumber(this.value)"></textarea>
+  <label>大约67字会自动拆分成2条短信发送</label><br/>
+  <label style="margin-top:10px;">接收人：</label>
+  <div>
+  	<div class="radio" style="display:none">
+   		<label>
+      		<input type="radio" name="optionsRadios" id="optionsRadios1" onclick="_rad(1)" value="option1"> 1.全部 - 默认
+   		</label>
+	</div>
+	<div class="radio">
+   		<label>
+      		<input type="radio" name="optionsRadios" id="optionsRadios2" onclick="_rad(2)" value="option2" checked> 1.指定 - 可以多选
+   		</label>
+	</div>
+	<div class="radio">
+   		<label>
+      		<input type="radio" name="optionsRadios" id="optionsRadios2" onclick="_rad(3)" value="option3"> 2.自定义 - 如有多个手机号用#隔开
+   		</label>
+	</div>
+	<div id="setoption2">
+  <ul class='nav nav-tabs'>
+    <li class='active'><a href='#p1' data-toggle='tab'>我的客户</a></li>
+  </ul>
+  <div class='tab-content'>
+    <div style='padding-top:10px;max-height:380px;overflow:auto' class='tab-pane fade in active' id='p1'>
+      <select class="input-sm selectpicker" onclick="set_mlist(this.value);" style="height:200px" id="contactsName1" multiple="multiple">
+        <option value='-'>选项加载中...</option>
+      </select>
+    </div>
+    <div style='padding-top:10px;max-height:380px;overflow:auto' class='tab-pane fade' id='p2'>
+       <select class="input-sm selectpicker" onclick="set_mlist(this.value);" style="height:200px" id="contactsName2" multiple="multiple">
+         <option value='-'>选项加载中...</option>
+       </select>
+    </div>
+  </div>
+		
+   
+	</div>
+	<label style="margin-top:10px;">接收人手机号：</label>
+	<textarea id="mobile_list" class="input-sm form-control" rows="3" disabled></textarea>
+	<button type="button" onclick="sendSMS()" style="margin-top:10px;" class="btn btn-default btn-sm"><span style="margin-right:5px;" class="glyphicon glyphicon-envelope"></span>发送</button>
+  </div>
+  <hr/>
+</div>
+
+     <div style="float:right;width:350px;">
+      <p style="text-align:center;margin:0;margin-bottom:3px"><b>内容模板，点击选择内容</b></p>
+        <div  style="overflow:scroll;width:350px;height:365px; border-top:1px solid #CCCCCC; border-left:1px solid #CCCCCC;border-radius:5px">
+           <ul>
+            <span style="font-size:16px;font-weight:bold;margin:5px">公司信息</span>
+             <li id="text1" style="margin:10px" class="text">上海荟邮网络科技有限公司-上海市杨浦区国定东路200号4号楼320室（近地铁10号线五角场站） 021-65112980 </li>
+             <li id="text2" style="margin:10px" class="text">客服中心：华夏国旅国际邮轮度假中心 -上海市静安区青海路118号4楼 （近地铁2号线南京西路站） 021-62582289 021-51876966转8812、8816、8819、8820、8833</li>
+           </ul>
+
+           <ul>
+           <span style="font-size:16px;font-weight:bold;margin:5px">账户信息</span>
+             <li id="text3" style="margin:10px" class="text">户名：上海华夏国际旅行社有限公司 ，账号：310066276018150031333，开户行：交通银行上海威海路支行。</li>
+             <li id="text4" style="margin:10px" class="text">户名：上海荟邮网络科技有限公司 ，账号：121912640210801，开户行：招商银行股份有限公司五角场支行。</li>
+             <li id="text5" style="margin:10px" class="text">户名：杨明伟，账号：6214850214780238，开户行：招商银行股份有限公司五角场支行。</li>
+             <li id="text6" style="margin:10px" class="text">户名：杨明伟，账号：6222600110057703055，开户行：交通银行上海市分行。</li>
+           </ul>
+        </div>
+        <p><b style="font-size:14px">设置签名：</b><span id="text7" style="font-size:14px"></span>&nbsp; &nbsp; &nbsp; &nbsp;<b style="font-size:14px">手机：</b><span id="text8" style="font-size:14px"></span></p>
+     </div>
+
+<script>
+    var _tablename = "sms";
+    $("#collapse3").attr("class","panel-collapse collapse in");
+    $("#collapse1_all").attr("class","panel-collapse collapse in");
+
+    function set_mlist(m){
+    	var l = $("#mobile_list").val();
+    	$("#mobile_list").val(l == ""?m:l+"#"+m);
+    }
+
+    function _getmyContactsOption(){
+        //获取咨询用户
+        $.ajax({ url: _tablename+"/getmyContactsOption1", data:{userid:getCookie("userID")}, success: function(data){
+            $("#contactsName1").html(data);
+        }});
+        //获取我的客户
+        $.ajax({ url: _tablename+"/getCus", data:{userid:getCookie("userID")}, success: function(data){
+            $("#contactsName2").html(data);
+        }});
+        //获取当前用户的手机号
+        $.ajax({ url: _tablename+"/getPhone",data:{userid:getCookie("userID")}, success: function(data){
+            $("#text7").html("["+getCookie("userName")+"]");
+            $("#text8").html("["+data[0].mobile_phone+"]");
+        }});
+    }
+
+    function sendSMS(){
+    	if($("#_content").val()==""){
+    		$("#content_info").html("短信内容不能为空！");
+    		$('#infoModal').modal('show');
+    		return false;
+    	}
+    	if($("#mobile_list").val()==""){
+    		$("#content_info").html("接收人手机号不能为空！");
+    		$('#infoModal').modal('show');
+    		return false;
+    	}
+
+           var b=document.getElementById("b");                   //文字超出范围 不能执行AJAX
+            if(b.innerHTML<0){
+               $("#content_info").html("超出文字限定");
+               $('#infoModal').modal('show');
+            }
+            else{
+
+              $.ajax({ url: _tablename+"/sendSMS", data:{id:getCookie("userID"),content:$("#_content").val(),sendTo:$("#mobile_list").val()}, success: function(data){
+             if(data==200){
+             $("#content_info").html("发送成功！");
+             }else{
+             $("#content_info").html("发送失败，请联系管理员！");
+             }
+             $('#infoModal').modal('show');
+             }});
+           }
+
+    }
+
+    function _rad(i){
+    	if(i==1){
+    		$('#setoption2').css('display','none');
+    		$('#mobile_list').attr('disabled','disabled');
+    		$('#mobile_list').val("全部");
+    	}else if(i==2){
+    		$('#setoption2').css('display','block');
+    		$('#mobile_list').attr('disabled','disabled');
+    		if($('#mobile_list').val()=="全部"){$('#mobile_list').val("");}
+    	}else if(i==3){
+    		$('#setoption2').css('display','none');
+    		$('#mobile_list').removeAttr('disabled');
+    		if($('#mobile_list').val()=="全部"){$('#mobile_list').val("");}
+    	}
+    }
+  
+   function constraintNumber(value){  //限制字数 constraintNumber
+       var length=value.length;
+       var box=document.getElementById("_content");
+       var b=document.getElementById("b");
+       b.innerHTML=260-length;
+    }
+
+    function clickDemoText(){  //点击模板 内容可累加
+        var text1=document.getElementById("text1");
+        var text2=document.getElementById("text2");
+        var text3=document.getElementById("text3");
+        var text4=document.getElementById("text4");
+        var text5=document.getElementById("text5");
+        var text6=document.getElementById("text6");
+        var _content=document.getElementById("_content");
+        text1.onclick=function(){
+           _content.style.color="#0066FF";
+           _content.focus();
+          _content.value+=text1.innerHTML;
+        };
+        text2.onclick=function(){
+          _content.style.color="#0066FF";
+          _content.focus();
+          _content.value+=text2.innerHTML;
+        };
+        text3.onclick=function(){
+          _content.style.color="#0066FF";
+          _content.focus();
+          _content.value+=text3.innerHTML;
+        };
+        text4.onclick=function(){
+          _content.style.color="#0066FF";
+          _content.focus();
+          _content.value+=text4.innerHTML;
+        };
+        text5.onclick=function(){
+          _content.style.color="#0066FF";
+          _content.focus();
+          _content.value+=text5.innerHTML;
+        };
+        text6.onclick=function(){
+          _content.style.color="#0066FF";
+          _content.focus();
+          _content.value+=text6.innerHTML;
+        };
+         text7.onclick=function(){
+          _content.style.color="#0066FF";
+          _content.focus();
+          _content.value+=text7.innerHTML;
+        };
+         text8.onclick=function(){
+          _content.style.color="#0066FF";
+          _content.focus();
+          _content.value+=text8.innerHTML;
+        };
+    }
+    clickDemoText();
+
+</script>
+<style type="text/css">
+   #_content,#mobile_list{width: 550px}
+   #_content{height:135px;}
+   #text1,#text2,#text3,#text4,#text5,#text6,#text7,#text8{cursor:pointer}
+</style>

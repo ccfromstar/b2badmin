@@ -1,0 +1,60 @@
+<script>
+    var _tablename = "contacts";
+    $("#collapse19").attr("class","panel-collapse collapse in");
+    $("#collapse9_all").attr("class","panel-collapse collapse in");
+
+    $("#myModalLabel").html("B2B用户信息");
+
+    $("#_updateContent").css("display","none");
+
+    $("#_tablecontent").css("max-height","420px");
+
+    $("#_dialogstyle").css("width","800px");
+
+    $("#_updateContent").removeAttr("style");
+
+    function setRC(_id){
+        var rcv = $("#rc"+_id).val();
+        $.ajax({ type:"POST" , url: _tablename+"/setRC", data:{id:_id,rcv:rcv}, success: function(data){
+            if(data==200){
+                        $("#content_info").html("修改成功！");
+                        $('#infoModal').modal('show');
+                        $('#ModalRead').modal('hide');
+                        $("#refresh").trigger("click");
+            }
+        }});
+    }
+
+    function setSA(_id){
+        var rcv = $("#sa"+_id).val();
+        $.ajax({ type:"POST" , url: _tablename+"/setSA", data:{id:_id,rcv:rcv}, success: function(data){
+            if(data==200){
+                        $("#content_info").html("修改成功！");
+                        $('#infoModal').modal('show');
+                        $('#ModalRead').modal('hide');
+                        $("#refresh").trigger("click");
+            }
+        }});
+    }
+
+    function setSORS(){
+    	var rcv = $("#topman").val();
+        $.ajax({ type:"POST" , url: _tablename+"/setSORS", data:{id:$("#id").val(),rcv:rcv}, success: function(data){
+            if(data==200){
+                        $("#content_info").html("修改成功！");
+                        $('#infoModal').modal('show');
+                        $('#ModalRead').modal('hide');
+                        $("#refresh").trigger("click");
+            }
+        }});
+    }
+
+    function setSOR(){
+
+    	$.ajax({ type:"POST" , url: _tablename+"/setSOR", success: function(data){
+    		//alert(data);
+    		$("#select_btn").css("display","none");
+            $("#_sor").html(data);
+        }});
+    }
+</script>

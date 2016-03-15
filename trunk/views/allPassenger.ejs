@@ -1,0 +1,82 @@
+<script>
+    var _tablename = "allpassenger";
+    $("#collapse22").attr("class","panel-collapse collapse in");
+    $("#collapse1_all").attr("class","panel-collapse collapse in");
+    function _newForm(){
+    	$.ajax({ type:"POST" , url: _tablename+"/insert", data:{
+    			name:$("#n_name").val(),
+    			contact:$("#n_contact").val(),
+    			content:$("#n_content").val(),
+    			schedule:$("#n_schedule").val(),
+    			type:$("#n_type").val(),
+    			user_id:$("#n_user_id").val(),
+    			time:$("#n_time").val()
+    			}, success: function(data){
+    				if(data==200){
+    					$("#content_info").html("新建成功！");
+            			$('#infoModal').modal('show');
+            			$('#addModal').modal('hide');
+            			$("#refresh").trigger("click");
+    				}
+        }});
+    }
+</script>
+
+<div class="modal fade" data-backdrop="static" id="addModal" tabindex="-1" role="dialog" 
+   aria-labelledby="myModalLabel2" aria-hidden="true">
+   <div class="modal-dialog" id="_dialogstyle" style="width:600px">
+      <div class="modal-content">
+         <div class="modal-header">
+            <button type="button" class="close" 
+               data-dismiss="modal" aria-hidden="true">
+                  &times;
+            </button>
+            <div class="modal-title" id="myModalLabel">新建咨询信息</div>
+         </div>
+         <div class="modal-body">
+             <table class="table table-bordered">
+             	<tr>
+             		<td>姓名</td>
+             		<td><input type="text" class="input-sm form-control" id="n_name"></input></td>
+             	</tr>	
+             	<tr>
+             		<td>联系方式</td>
+             		<td><input type="text" class="input-sm form-control" id="n_contact"></input></td>
+             	</tr>
+             	<tr>
+             		<td>咨询内容</td>
+             		<td><textarea class="input-sm form-control" id="n_content" rows="3"></textarea></td>
+             	</tr>
+             	<tr>
+             		<td>进度</td>
+             		<td><input type="text" class="input-sm form-control" id="n_schedule" ></input></td>
+             	</tr>
+             	<tr>
+             		<td>类型</td>
+             		<td>
+             			<select id="n_type" class="input-sm selectpicker">
+             				<option value="1">散客</option>
+             				<option value="2">同行</option>
+             			</select>
+             		</td>
+             	</tr>
+             	<tr>
+             		<td>录入人ID</td>
+             		<td><input type="text" class="input-sm form-control" id="n_user_id"  disabled ></input></td>
+             	</tr>
+             	<tr>
+             		<td>时间</td>
+             		<td><input type="text" class="input-sm form-control" id="n_time" disabled ></input></td>
+             	</tr>
+             </table>
+         </div>
+         <div class="modal-footer" id="_footer">
+         	<button type="button" class="btn btn-default btn-xs" onclick="_newForm()">提交
+            </button>
+            <button type="button" class="btn btn-default btn-xs" 
+               data-dismiss="modal">关闭
+            </button>
+         </div>
+      </div><!-- /.modal-content -->
+    </div>
+</div><!-- /.modal -->

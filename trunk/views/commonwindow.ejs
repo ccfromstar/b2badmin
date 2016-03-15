@@ -1,0 +1,49 @@
+<div class="modal fade" data-backdrop="static" id="ModalRead" tabindex="-1" role="dialog" 
+   aria-labelledby="myModalLabel2" aria-hidden="true">
+   <div class="modal-dialog" id="_dialogstyle" style="width:900px">
+      <div class="modal-content">
+         <div class="modal-header">
+            <button type="button" class="close" 
+               data-dismiss="modal" aria-hidden="true">
+                  &times;
+            </button>
+            <div class="modal-title" id="myModalLabel"></div>
+         </div>
+         <div class="modal-body">
+            <table  id="_updateContent">
+                    <tr><th >名称</th><th style='display:none'>字段</th><th style="padding-left:10px;">原值</th><th style="padding-left:10px;">新值</th><th></th></tr>
+              <tr>
+                <td><select onchange="_set(this.value)" id="filed_sel" class="input-sm selectpicker"></select></td>
+                        <td style='display:none'><input type="hidden" class="input-sm form-control" id='fieldname' disabled ></input></td>
+                        <td style="padding-left:10px;"><input type="text" class="input-sm form-control" id='oldvalue' disabled ></input></td>
+                        <td style="padding-left:10px;"><input type="text" class="input-sm form-control" id='newvalue' ></input></td>
+                <td style="padding-left:10px;"><button type="button" onclick="_setData()" class="btn btn-default btn-sm">提交修改</button></td>
+              </tr>
+            </table>
+            <!--<input type="text" class="form-control" id='update_sql' style="width:300px;margin-top:10px" disabled ></input>-->
+          <div id="_tablecontent" style = "max-height:320px;overflow-y:auto;margin-top:10px">
+              <table id="mbody_read" class="table table-bordered"></table>
+              <input type="hidden" id="recordID" ></input>
+            </div>
+         </div>
+         <div class="modal-footer" id="_footer">
+            <button type="button" class="btn btn-default" 
+               data-dismiss="modal">关闭
+            </button>
+         </div>
+      </div><!-- /.modal-content -->
+    </div>
+</div><!-- /.modal -->
+
+<script>
+
+  for(var i=1;i<23;i++){
+      $("#collapse"+i).attr("class","panel-collapse collapse");
+  }
+
+  for(var i=1;i<12;i++){
+      $("#collapse"+i+"_all").attr("class","panel-collapse collapse");
+  }
+
+  var maxi = 10; //默认每页显示10条
+</script>

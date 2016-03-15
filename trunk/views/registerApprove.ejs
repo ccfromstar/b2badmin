@@ -1,0 +1,29 @@
+<script>
+    var _tablename = "registerApprove";
+
+    $("#collapse1").attr("class","panel-collapse collapse in");
+
+    $("#collapse2_all").attr("class","panel-collapse collapse in");
+
+    $("#myModalLabel").html("用户注册审核");
+
+    $("#_updateContent").css("display","none");
+
+    $("#_tablecontent").css("max-height","420px");
+
+    $("#_dialogstyle").css("width","800px");
+    
+    var _btn = "<button type='button' class='btn btn-default' data-dismiss='modal' onclick='approve(1)'>审核通过</button>";
+    _btn = _btn+"<button type='button' class='btn btn-default' data-dismiss='modal' onclick='approve(0)'>审核不通过</button>";
+    $("#_footer").html(_btn+$("#_footer").html());
+
+    function approve(i) {
+    	$.ajax({ type:"POST" , url: "/registerApprove/confirmNewUser", data:{userid:getCookie("userID"),id:$("#id").val(),company_id:$("#company_id").val(),email:$("#email").val(),userTel:$("#userTel").val(),type:i}, success: function(data){
+    		if(data==200){
+    			$("#content_info").html("操作成功！");
+                $('#infoModal').modal('show');
+                toPage(1);
+    		}
+        }}); 
+    }
+</script>

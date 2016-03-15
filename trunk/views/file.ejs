@@ -1,0 +1,111 @@
+<script>
+    var _tablename = "file";
+    $("#collapse9").attr("class","panel-collapse collapse in");
+    $("#collapse1_all").attr("class","panel-collapse collapse in");
+    function _newForm(){
+        if($("#n_filename_1").val()==""){
+            $("#content_info").html("文件名不能为空！");
+            $('#infoModal').modal('show');
+            return false;
+        }
+        if($("#inB2B").val()=="-"){
+            $("#content_info").html("请选择是否录入平台！");
+            $('#infoModal').modal('show');
+            return false;
+        }
+    	document.forms[0].submit();
+    }
+
+    function getname(i){
+        var name1 = $("#file"+i).val();
+        var tmp = name1.split("\\");
+        $("#n_filename_"+i).val(tmp[tmp.length-1]);
+    }
+
+    function showuploadsuccess(){
+        $("#content_info").html("文件上传成功！");
+        $('#infoModal').modal('show');
+    }
+
+    function b2bin(_id,_i){
+        $.ajax({ type:"POST" , url: _tablename+"/updateB2Bin", data:{
+                id:_id,
+                i:_i
+                }, success: function(data){
+                    if(data==200){
+                        $("#content_info").html("设置成功！");
+                        $('#infoModal').modal('show');
+                        $('#editModal').modal('hide');
+                        $("#refresh").trigger("click");
+                    }
+        }});
+    }
+</script>
+
+<div class="modal fade" data-backdrop="static" id="addModal" tabindex="-1" role="dialog" 
+   aria-labelledby="myModalLabel2" aria-hidden="true">
+   <div class="modal-dialog" id="_dialogstyle" style="width:600px">
+      <div class="modal-content">
+         <div class="modal-header">
+            <button type="button" class="close" 
+               data-dismiss="modal" aria-hidden="true">
+                  &times;
+            </button>
+            <div class="modal-title" id="myModalLabel">新建文件信息</div>
+         </div>
+         <div class="modal-body">
+         <form method="post" action="/file/insertFileRecord">
+             <table class="table table-bordered">
+             	<tr>
+             		<td colspan="2">
+                        <iframe frameborder=0 src="html/newfile.html" style="width:550px;height:90px"></iframe>     
+                    </td>
+             	</tr>	
+             	<tr>
+             		<td>文件类型</td>
+             		<td>
+             			<select id="n_type" name="n_type" class="input-sm selectpicker">
+
+             				<option value="1">邮轮公司资料</option>
+                            <option value="2">业务操作文件</option>
+                            <option value="3">产品计划</option>
+                            <option value="4">工作统计</option>
+             			</select>
+             		</td>
+             	</tr>
+                <tr>
+                    <td>文件名</td>
+                    <td><input type="text" class="input-sm form-control" name="n_filename_1"  id="n_filename_1" ></input></td>
+                </tr>
+                <tr>
+                    <td>是否录入平台</td>
+                    <td>
+                        <select id="inB2B" name="inB2B" class="input-sm selectpicker">
+                            <option value="-">请选择</option>
+                            <option value="0">否</option>
+                            <option value="1">是</option>
+                        </select>
+                    </td>
+                </tr>
+             	<tr>
+             		<td>录入人ID</td>
+             		<td><input type="text" class="input-sm form-control" name="n_user_id" id="n_user_id"  readonly ></input></td>
+             	</tr>
+             	<tr>
+             		<td>时间</td>
+             		<td><input type="text" class="input-sm form-control" name="n_time" id="n_time" readonly ></input></td>
+             	</tr>
+             </table>
+             <input type="hidden" name="n_fname" ></input>
+        </form>
+         </div>
+         <div class="modal-footer" id="_footer">
+         	<button type="button" class="btn btn-default btn-xs" onclick="_newForm()">提交
+            </button>
+            <button type="button" class="btn btn-default btn-xs" 
+               data-dismiss="modal">关闭
+            </button>
+         </div>
+      </div><!-- /.modal-content -->
+    </div>
+</div><!-- /.modal -->

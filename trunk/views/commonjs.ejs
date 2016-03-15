@@ -1,0 +1,291 @@
+    <script>
+        var url = window.location.href;
+        var tmpurl = url.split("/");
+        //检测当前是否登陆
+        $.ajax({ type:"POST" , url: "/user/checkRole", data:{username:document.getElementById("name").value}, success: function(data){
+                if(data){
+                   $("#userName").html(getCookie("userName"));
+                   if(!checkPage(tmpurl[3])){return false;}
+                   _getAll();                   
+                }else{
+                   $('#loginModal').modal('show');
+                }
+        }});
+
+        //是否记住用户名，密码
+        var remember = getCookie("remember");
+        if (remember) {
+            document.getElementById("name").value=getCookie("username");
+            document.getElementById("pwd").value=getCookie("password");
+
+            document.getElementById("txtRememberKey").checked=true;
+        }
+
+        //注销
+        function logout() {
+              deleteCookie("userID");
+              deleteCookie("userName");
+              $.ajax({ type:"POST" , url: "/user/logout", data:{username:document.getElementById("name").value}, success: function(data){
+                if ( data == 'logoutSuccess') {
+                  $('#loginModal').modal('show');
+                }
+              }});              
+        }
+
+        //登陆
+        function login() {
+            if($("#name").val()==""){
+                $("#content_info").html("用户名不能为空！");
+                $('#infoModal').modal('show');
+                return false;
+            }
+            if($("#pwd").val()==""){
+                $("#content_info").html("密码不能为空！");
+                $('#infoModal').modal('show');
+                return false;
+            }
+
+            //判断是否记住
+            if(document.getElementById("txtRememberKey").checked){
+              setCookie("username",document.getElementById("name").value,30);
+              setCookie("password",document.getElementById("pwd").value,30);
+              setCookie("remember",document.getElementById("txtRememberKey").checked,30);
+            }else{
+              deleteCookie("username");
+              deleteCookie("password");
+              deleteCookie("remember");
+            }
+
+            $.ajax({ type:"POST" , url: "/user/checkLogin", data:{username:document.getElementById("name").value,password:document.getElementById("pwd").value}, success: function(data){
+                if(data == "loginWrong"){
+                    $("#content_info").html("用户名或密码错误！");
+                    $('#infoModal').modal('show');
+                }else{
+                    var tmp = data.split("|");
+                    $('#loginModal').modal('hide');
+                    $("#userName").html(tmp[1]);
+                    setCookie("userID",tmp[0],30);
+                    setCookie("userName",tmp[1],30);
+                    _showNotice();
+                    if(!checkPage(tmpurl[3])){return false;}
+                    _getAll();
+                }
+            }});
+        }
+
+        function balert(info){
+            $("#content_info").html(info);
+            $('#infoModal').modal('show');
+        }
+
+        function checkPage(name){
+            checkRole();
+            if(name=="sms"){_getContactsOption();}
+            if(name=="mysms"){_getmyContactsOption();}
+            if(name=="cabin"){_getShipOption();}
+            if(name=="visits"){createV();}
+            if(name=="userlevel"){createV();}
+            if(name=="productchart"){_getBarChart('getChart4','在售产品统计-按供应商');}
+            if(name==""){
+                _getlog();
+            }
+            if(name=="linelist"){
+                $("#iframe1").attr("src","https://www.huiyoulun.com/linelist?id="+getCookie("userID"));
+            }
+
+            $("#refertoP2").click(function(){
+                window.open("http://www.huiyoulun.com/userdominomanagement?id="+getCookie("userID"));
+            });
+
+            if(name==""|name=="productchart"|name=="updatelog"|name=="linelist"|name=="visits"|name=="userlevel"|name=="cmbpay"){
+                return false;
+            }else{
+                return true;
+            }
+        }
+
+        //根据不同Page显示路径
+        $("#"+tmpurl[3]+"LI").css("background-color","#F5F5F5");
+
+    //********************************页面通用方法 BEGIN**********************************************************************
+    function _showNotice(){
+        //显示更新公告
+        $.ajax({ url: "common/getLog", success: function(data){
+            var _log = "<h2>最新公告和更新日志</h2><br/>";
+            var _time = "";
+            var _type = "";
+            for(var i in data){
+                if(i<5){
+                    var _title = "</br></br>" + data[i].text ;
+                if(data[i].time == _time){
+                    _log = _log + _title ;
+                }else{
+                    _log = _log + (_log==""?"":"<br/></br>")+"<b>" + data[i].time + "</b>" + _title;
+                    _time = data[i].time;
+                } 
+                }
+            }
+            $("#content_info").html(_log);
+            $('#infoModal').modal('show');
+        }});
+        //var info = "<h2>最新公告</h2><br/>2015-02-05<br/><br/>1.在客服模块下增加了图片管理，可以查看B2C所有的图片资源，方便查看还缺哪些图片需要补的<br/><br/>2.原周报管理和咨询管理现合并为业务管理<br/><br/>3.首页布局调整<br/><br/>4.文件管理里的《荷美邮轮介绍ppt》因为文件太大70几M没有上传成功，所以打不开，需要的可以直接联系客服彬索取";
+        
+    }
+
+    function _getlog(){
+        $.ajax({ url: "common/getLog", success: function(data){
+            var _log = "";
+            var _time = "";
+            var _type = "";
+            for(var i in data){
+                var _title = "</br>" + data[i].text ;
+                if(data[i].time == _time){
+                    _log = _log + _title ;
+                }else{
+                    _log = _log + (_log==""?"":"<br/></br>")+"<b>" + data[i].time + "</b>" + _title;
+                    _time = data[i].time;
+                } 
+            }
+            $("#_loglist").html(_log);
+        }});
+    }
+
+    function _getAll(){
+        $("#colname").val("");
+        $("#s_value").val("");
+        $("#s_column").val("-");
+        $("#s_symbol").val("like");
+        $.ajax({ url: _tablename+"/getAll" , data:{c_userid:getCookie("userID")}, success: function(data){
+            $("#viewtable").html(data);
+            if($("#_searchBtn").attr("style")){
+                $("#_searchDIV").removeAttr("style");
+                _getSearchOption();
+                setNew();
+            }
+        }});
+    }
+
+    function _getSearchOption(){
+        $.ajax({ url: _tablename+"/getSearchOption", success: function(data){
+            $("#s_column").html(data);
+        }});
+    }
+
+    function setNew(){
+        if(tmpurl[3]=="myPassenger" ||tmpurl[3]=="sysupdate" ||tmpurl[3]=="file"|| tmpurl[3]=="cabin" || tmpurl[3]=="myCustomer" || tmpurl[3]=="myExcelB" || tmpurl[3]=="myExcelA"){
+            $("#_newtd").css("display","inline");
+            $("#_new").css("display","inline");
+            $("#_new").click(function(){
+                $('#addModal').modal('show');
+                $("#n_user_id").val(getCookie("userID"));
+                var myDate=new Date();
+                $("#n_time").val(myDate.Format("yyyy-MM-dd hh:mm:ss"));
+            });
+        }
+    }
+
+    function _setSColumn(val) {
+        var tmp = val.split("|");
+        $("#colname").val(tmp[0]);
+    }
+
+    function _set(val) {
+        var tmp = val.split("|");
+        $("#fieldname").val(tmp[0]);
+        $("#oldvalue").val(tmp[1]);
+    }
+
+    function toPage(_page){
+        var s_col = $("#colname").val();
+        var s_symbol = $("#s_symbol").val();
+        var s_value = $("#s_value").val();
+        var _sql = s_col + " " +s_symbol +" "+ (s_symbol=="like"?"'%"+s_value+"%'":"'"+s_value+"'");
+        if(s_col==""){
+            _sql = "";
+        }
+        if(_sql!=""){
+            $.ajax({ type:"POST" , url: _tablename+"/getAllbyKey", data:{page:_page,max:maxi,key:_sql,c_userid:getCookie("userID")}, success: function(data){
+                $("#viewtable").html(data);
+                setNew();
+            }});
+        }else{
+            $.ajax({ type:"POST" , url: _tablename+"/getAll", data:{page:_page,max:maxi,c_userid:getCookie("userID")}, success: function(data){
+                $("#viewtable").html(data);
+                setNew();
+            }});
+        }
+    }
+
+    function _setData(){
+        var _columnname = $("#fieldname").val();
+        var _oldvalue = $("#oldvalue").val();
+        var _newvalue = $("#newvalue").val();
+        var _id = $("#recordID").val();
+        var _editorid = getCookie("userID");
+        $.ajax({ type:"POST" , url: _tablename+"/update", data:{columnname:_columnname,oldvalue:_oldvalue,newvalue:_newvalue,editorid:_editorid,id:_id}, success: function(data){
+            $("#content_info").html("修改成功！");
+            $('#infoModal').modal('show');
+            setReadinfo(_id);
+            $("#refresh").trigger("click");
+        }});
+    }
+
+    function setReadinfo(_id){
+        $.ajax({ type:"POST" , url: _tablename+"/getbyId", data:{id:_id}, success: function(data){
+            $("#recordID").val(_id);
+            $("#mbody_read").html(data);
+            //设置修改字段下拉框的选项
+            $.ajax({ type:"POST" , url: _tablename+"/getoptionbyId", data:{id:_id}, success: function(data1){
+                $("#filed_sel").html(data1);
+                $("#fieldname").val("");
+                $("#oldvalue").val("");
+                $("#newvalue").val("");
+            }});
+        }});
+    }
+
+    function _search(_page){
+        //var _sql = $("#search_sql").val();
+        var s_col = $("#colname").val();
+        if(s_col==""){
+            $("#content_info").html("请选择您要搜索的字段！");
+            $('#infoModal').modal('show');
+            return false;
+        }
+        var s_symbol = $("#s_symbol").val();
+        var s_value = $("#s_value").val();
+        var _sql = s_col + " " +s_symbol +" "+ (s_symbol=="like"?"'%"+s_value+"%'":"'"+s_value+"'");
+        $.ajax({ type:"POST" , url: _tablename+"/getAllbyKey", data:{page:_page,max:maxi,key:_sql,c_userid:getCookie("userID")}, success: function(data){
+            $("#viewtable").html(data);
+            setNew();
+        }});
+    }
+
+    function checkRole(){
+        var idlist = "24@37@87@75@72@108";
+        var id = getCookie("userID");
+        if(idlist.indexOf(id)==-1){
+            $("#model8").css("display","none");
+        }else{
+            $("#model8").removeAttr("style");
+        }
+    }
+
+    //****************************页面通用方法 END **************************************************************
+
+    Date.prototype.Format = function (fmt) { //author: meizz
+    var o = {
+        "M+": this.getMonth() + 1, //月份
+        "d+": this.getDate(), //日
+        "h+": this.getHours(), //小时
+        "m+": this.getMinutes(), //分
+        "s+": this.getSeconds(), //秒
+        "q+": Math.floor((this.getMonth() + 3) / 3), //季度
+        "S": this.getMilliseconds() //毫秒
+    };
+    if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+    for (var k in o)
+        if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+    return fmt;
+    }
+    </script>

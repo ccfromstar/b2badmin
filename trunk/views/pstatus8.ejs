@@ -1,0 +1,305 @@
+<script>
+    var _tablename = "product8";
+    $("#collapse2").attr("class","panel-collapse collapse in");
+    $("#collapse6_all").attr("class","panel-collapse collapse in");
+
+    $("#myModalLabel").html("产品详情");
+
+    $("#_updateContent").css("display","none");
+
+    $("#_tablecontent").css("max-height","450px");
+
+    $("#_dialogstyle").css("width","1060px");
+
+    var proname = "productdetail";
+
+    var loading = "<span class='glyphicon glyphicon-refresh' style='margin-right:5px'></span>数据加载中";
+
+    function setProinfo(_id){
+    	//加载产品详情
+    	var ihtml = "";
+    	ihtml = ihtml + "<ul class='nav nav-tabs'>";
+    	ihtml = ihtml + "<li class='active'><a href='#p1' data-toggle='tab' onclick='getPinfo1("+_id+")'>产品信息</a></li>";
+    	ihtml = ihtml + "<li><a href='#p2' data-toggle='tab' onclick='getPinfo2("+_id+")'>价格体系及费用说明</a></li>";
+    	ihtml = ihtml + "<li><a href='#p3' data-toggle='tab' onclick='getPinfo3("+_id+")'>行程说明</a></li>";
+    	ihtml = ihtml + "<li><a href='#p4' data-toggle='tab' onclick='getPinfo4("+_id+")'>签证签注及预订说明</a></li>";
+    	ihtml = ihtml + "<li><a href='#p5' data-toggle='tab' onclick='getPinfo5("+_id+")'>邮轮介绍</a></li>";
+    	ihtml = ihtml + "</ul>";
+    	ihtml = ihtml + "<div class='tab-content'>";
+        ihtml = ihtml + "<div style='padding-top:10px;max-height:380px;overflow:auto' class='tab-pane fade in active' id='p1'>"+loading+"</div>";
+        ihtml = ihtml + "<div style='padding-top:10px;max-height:380px;overflow:auto' class='tab-pane fade' id='p2'>"+loading+"</div>";
+        ihtml = ihtml + "<div style='padding-top:10px;max-height:380px;overflow:auto' class='tab-pane fade' id='p3'>"+loading+"</div>";
+        ihtml = ihtml + "<div style='padding-top:10px;max-height:380px;overflow:auto' class='tab-pane fade' id='p4'>"+loading+"</div>";
+        ihtml = ihtml + "<div style='padding-top:10px;max-height:380px;overflow:auto' class='tab-pane fade' id='p5'>"+loading+"</div>";
+        ihtml = ihtml + "</div>";
+        $("#_tablecontent").html(ihtml);
+        getPinfo1(_id);
+    }
+
+    function setRC(_id){
+        var rcv = $("#rc"+_id).val();
+        $.ajax({ type:"POST" , url: _tablename+"/setRC", data:{id:_id,rcv:rcv}, success: function(data){
+            if(data==200){
+                        $("#content_info").html("修改成功！");
+                        $('#infoModal').modal('show');
+                        $('#addModal').modal('hide');
+                        $("#refresh").trigger("click");
+            }
+        }});
+    }
+
+    function setP1(_id){
+        $.ajax({ type:"POST" , url: _tablename+"/setP1", data:{id:_id}, success: function(data){
+            if(data==200){
+                        $("#content_info").html("设置成功！");
+                        $('#infoModal').modal('show');
+                        $('#addModal').modal('hide');
+                        $("#refresh").trigger("click");
+            }
+        }});
+    }
+
+    function setP2(_id){
+        $.ajax({ type:"POST" , url: _tablename+"/setP2", data:{id:_id}, success: function(data){
+            if(data==200){
+                        $("#content_info").html("设置成功！");
+                        $('#infoModal').modal('show');
+                        $('#addModal').modal('hide');
+                        $("#refresh").trigger("click");
+            }
+        }});
+    }
+
+    function setP3(_id){
+        $.ajax({ type:"POST" , url: _tablename+"/setP3", data:{id:_id}, success: function(data){
+            if(data==200){
+                        $("#content_info").html("设置成功！");
+                        $('#infoModal').modal('show');
+                        $('#addModal').modal('hide');
+                        $("#refresh").trigger("click");
+            }
+        }});
+    }
+
+    function getPinfo5(_id){
+        //获取邮轮介绍
+        var ihtml = "";
+        $.ajax({ type:"POST" , url: proname+"/getProject", data:{id:_id}, success: function(product){
+            var shipImg1 = "";
+            var shipImg2 = "";
+            var shipImg3 = "";
+            var haspic = 1;
+            if(product[0].txtShipName == "维多利亚号"){
+                shipImg1 = "ship41.jpg";
+                shipImg2 = "ship42.jpg";
+            }else if(product[0].txtShipName == "海洋航行者号"){
+                shipImg1 = "ship11.jpg";
+                shipImg2 = "ship12.jpg";
+            }else if(product[0].txtShipName == "海洋水手号"){
+                shipImg1 = "ship21.jpg";
+                shipImg2 = "ship22.jpg";
+            }else if(product[0].txtShipName == "大西洋号"){
+                shipImg1 = "ship31.jpg";
+                shipImg2 = "ship32.jpg";
+            }else if(product[0].txtShipName == "蓝宝石公主号"){
+                shipImg1 = "ship51.jpg";
+                shipImg2 = "ship52.jpg";
+            }else if(product[0].txtShipName == "中华泰山号"){
+                shipImg1 = "ZHTSH1.jpg";
+                shipImg2 = "ZHTSH2.jpg";
+                shipImg3 = "ZHTSH3.jpg";
+
+            }else if(product[0].txtShipName == "海娜号"){
+                shipImg1 = "hnh1.jpg";
+                shipImg2 = "hnh2.jpg";
+               
+                
+            }else if(product[0].txtShipName == "精致千禧号"){
+                shipImg1 = "jzqxh1.jpg";
+                shipImg2 = "jzqxh2.jpg";
+                shipImg3 = "jzqxh3.jpg";
+               
+                
+            }else if(product[0].txtShipName == "日出号"){
+                shipImg1 = "bmrch1.jpg";
+                shipImg2 = "bmrch2.jpg";
+                
+               
+                
+            }else if(product[0].txtShipName == "君主号"){
+                shipImg1 = "bmjzh1.jpg";
+                shipImg2 = "bmjzh2.jpg";
+                shipImg3 = "bmjzh3.jpg";
+               
+                
+            }else{
+                haspic = 0;
+            }
+            if(haspic==1){
+                ihtml = ihtml + "<img style='width:960px;' src='"+product[0].imgpath+shipImg1+"' ></img>";
+                ihtml = ihtml + "<img style='width:960px;' src='"+product[0].imgpath+shipImg2+"' ></img>";
+                if(shipImg3!=""){
+                    ihtml = ihtml + "<img style='width:960px;' src='"+product[0].imgpath+shipImg3+"' ></img>";
+                }
+            }
+            $("#p5").html(ihtml);   
+        }});
+    }
+
+    function getPinfo4(_id){
+        //获取签证签注及预订说明
+        var ihtml = "";
+        $.ajax({ type:"POST" , url: proname+"/getProject", data:{id:_id}, success: function(product){
+            ihtml = ihtml + "<table class='table table-bordered'>";
+            ihtml = ihtml + "<tr><td style='width:90px'>签证相关文件</td><td><div id='pf'>"+loading+"</div></td></tr>";
+            ihtml = ihtml + "<tr><td>签证材料收取截止日</td><td>"+(new Date(product[0].visa_application_until)).Format("yyyy-MM-dd")+"</td></tr>";
+            ihtml = ihtml + "<tr><td>签证说明</td><td>"+(product[0].visa_comment?product[0].visa_comment.replace(/\n/g,"<br/>"):"")+"</td></tr>";
+            ihtml = ihtml + "<tr><td>付款说明</td><td>"+(product[0].payment_comment?product[0].payment_comment.replace(/\n/g,"<br/>"):"")+"</td></tr>";
+            ihtml = ihtml + "<tr><td>取消政策</td><td>"+(product[0].cancellation_policy?product[0].cancellation_policy.replace(/\n/g,"<br/>"):"")+"</td></tr>";
+            ihtml = ihtml + "<tr><td>预订须知</td><td>"+(product[0].booking_note?product[0].booking_note.replace(/\n/g,"<br/>"):"")+"</td></tr>";
+            ihtml = ihtml + "</table>";
+            $("#p4").html(ihtml);   
+            //获取签证相关文件
+            $.ajax({ type:"POST" , url: proname+"/getPF", data:{id:_id}, success: function(pf){
+                var re = "";
+                for(var i in pf){
+                    if(pf[i].file_name!=""){
+                        re = "<a href='#'' onclick='window.open(\""+product[0].imagepath+pf[i].file_path+"\");'>"+pf[i].file_name+"</a>&nbsp;&nbsp;&nbsp;&nbsp;";
+                    }
+                }
+                $("#pf").html(re);
+            }});  
+        }});
+    }
+
+    function getPinfo3(_id){
+        //获取行程信息
+        var ihtml = "";
+        $.ajax({ type:"POST" , url: proname+"/gettravel_schedule", data:{id:_id}, success: function(ts){
+            ihtml = ihtml + "<table class='table table-bordered'>";
+            for(var i in ts){
+            ihtml = ihtml + "<tr>";
+            ihtml = ihtml + "<td style='width: 160px;'>第"+ts[i].day_number+"天</td>";
+            ihtml = ihtml + "<td style='width: 160px;'>"+ts[i].location+"</td>";
+            ihtml = ihtml + "<td style='width: 160px;'>"+((ts[i].departure_time+"").substring(0,5)=="00:00"?"-":(ts[i].departure_time+"").substring(0,5))+"到达</td>";
+            ihtml = ihtml + "<td style='width: 160px;'>"+((ts[i].arrival_time+"").substring(0,5)=="00:00"?"-":(ts[i].arrival_time+"").substring(0,5))+"出发</td>";
+            ihtml = ihtml + "<td style='width: 160px;'>早餐:"+ts[i].breakfast+"</td>";
+            ihtml = ihtml + "<td style='width: 160px;'>午餐:"+ts[i].lunch+"</td>";
+            ihtml = ihtml + "<td style='width: 160px;'>晚餐:"+ts[i].dinner+"</td>";
+            ihtml = ihtml + "<td style='width: 160px;'>住宿:"+ts[i].overnight_stay+"</td>";
+            ihtml = ihtml + "</tr>";
+            ihtml = ihtml + "<tr><td colspan='8'>"+ts[i].description+"</td></tr>";
+            }
+            ihtml = ihtml + "</table>";
+            ihtml = ihtml + "<div id='schedule_comment'>"+loading+"</div>";
+            ihtml = ihtml + "<div id='excursion_txt'>"+loading+"</div>";
+            $("#p3").html(ihtml);
+            //获取行程备注
+            $.ajax({ type:"POST" , url: proname+"/getProject", data:{id:_id}, success: function(product){
+                var re = "<table class='table table-bordered'><tr><td>行程备注:</td></tr><tr><td>"+product[0].schedule_comment+"</td></tr></table>";
+                $("#schedule_comment").html(re);
+            }});
+            //获取岸上游行程
+            $.ajax({ type:"POST" , url: proname+"/getProject", data:{id:_id}, success: function(product){
+                var re = "<table class='table table-bordered'><tr><td>岸上游行程:</td></tr><tr><td>"+product[0].excursion_txt+"</td></tr></table>";
+                $("#excursion_txt").html(re);
+            }});
+        }});
+    }
+
+    function getPinfo2(_id){
+        //获取价格信息
+        var ihtml = "";
+        $.ajax({ type:"POST" , url: proname+"/getProductPosition", data:{id:_id}, success: function(price){
+            ihtml = ihtml + "<table class='table table-bordered'>";
+            ihtml = ihtml + "<tr>";
+            ihtml = ihtml + "<td style='width: 65px;'>代码</td>";
+            ihtml = ihtml + "<td style='width: 160px;'>舱房说明</td>";
+            ihtml = ihtml + "<td style='width: 105px;'>最大入住人数</td>";
+            ihtml = ihtml + "<td style='width: 105px;'>第1/2人市场价</td>";
+            ihtml = ihtml + "<td style='width: 105px;'>第1/2人结算价</td>";
+            ihtml = ihtml + "<td style='width: 105px;'>第3/4人市场价</td>";
+            ihtml = ihtml + "<td style='width: 105px;'>第3/4人结算价</td>";
+            ihtml = ihtml + "<td style='width: 105px;'>儿童市场价</td>";
+            ihtml = ihtml + "<td style='width: 105px;'>儿童结算价</td>";
+            ihtml = ihtml + "<td style='width: 105px;'>可售房间数</td>";
+            ihtml = ihtml + "</tr>";
+            var cat1 = ['內舱','皇家大道景观房','海景房','阳台房','套房'];
+            var cat2 = [1,5,2,3,4];
+            for(var k = 0;k<cat1.length;k++){
+              for(var i in price){
+                if(price[i].amount != 0 && price[i].cabin_type_id==cat2[k]){
+                    ihtml = ihtml + "<tr><td colspan='10'>"+cat1[k]+"</td></tr>";
+                    break;
+                }
+              }
+              for(var i in price){
+               if(price[i].amount != 0 && price[i].cabin_type_id==cat2[k]){
+                ihtml = ihtml + "<tr>";
+                ihtml = ihtml + "<td>"+price[i].txtCabinNo+"</td>";
+                ihtml = ihtml + "<td>"+price[i].txtCabinName+"</td>";
+                ihtml = ihtml + "<td>"+price[i].numCanCheckIn+"</td>";
+                ihtml = ihtml + "<td>"+price[i].price+"</td>";
+                ihtml = ihtml + "<td>"+price[i].retail_price+"</td>";
+                ihtml = ihtml + "<td>"+(price[i].price_2==0?"-":price[i].price_2)+"</td>";
+                ihtml = ihtml + "<td>"+(price[i].retail_price_2==0?"-":price[i].retail_price_2)+"</td>";
+                ihtml = ihtml + "<td>"+(price[i].price_child==0?"-":price[i].price_child)+"</td>";
+                ihtml = ihtml + "<td>"+(price[i].retail_price_child==0?"-":price[i].retail_price_child)+"</td>";
+                ihtml = ihtml + "<td>"+price[i].amount+"</td>";
+                ihtml = ihtml + "</tr>";
+               }
+              }
+            }
+            ihtml = ihtml + "</table>";
+            ihtml = ihtml + "<div id='remark'>"+loading+"</div>";
+            ihtml = ihtml + "<div id='insurance'>"+loading+"</div>";
+            ihtml = ihtml + "<div id='included'>"+loading+"</div>";
+            $("#p2").html(ihtml);
+            //获取舱房备注
+            $.ajax({ type:"POST" , url: proname+"/getProject", data:{id:_id}, success: function(product){
+                var re = "<table class='table table-bordered'><tr><td>舱房备注:</td></tr><tr><td>"+product[0].cabin_comment+"</td></tr></table>";
+                $("#remark").html(re);
+            }});    
+            //获取保险
+            $.ajax({ type:"POST" , url: proname+"/getInsurance", data:{id:_id}, success: function(insurance){
+                var _ins = (insurance[0]&&insurance[0].type!=""?"险种："+insurance[0].type+"<br/>单价："+insurance[0].price+"&nbsp;元/人<br/>说明："+insurance[0].description:"");
+                var _insall = "<table class='table table-bordered'><tr><td>保险:</td></tr><tr><td>"+_ins+"</td></tr></table>";
+                $("#insurance").html(_insall);
+            }}); 
+            //获取费用包含
+            $.ajax({ type:"POST" , url: proname+"/getIncluded", data:{id:_id}, success: function(include){
+                var re = "<table class='table table-bordered'><tr><td style='width:90px'>费用包含</td><td>"+include.bh+"</td></tr><tr><td>费用不包含</td><td>"+include.bbh+"</td></tr><tr><td>其他费用说明</td><td>"+include.other+"</td></tr></table>";
+                $("#included").html(re);
+            }}); 
+        }});    
+    }
+
+    function getPinfo1(_id){
+        //获取product表里的数据信息
+        var ihtml = "";
+        $.ajax({ type:"POST" , url: proname+"/getProject", data:{id:_id}, success: function(product){
+            ihtml = ihtml + "<table class='table table-bordered'>";
+            ihtml = ihtml + "<tr><td style='width:90px'>产品名称</td><td>"+product[0].title+"</td></tr>";
+            ihtml = ihtml + "<tr><td>航区</td><td>"+product[0].txtCruiseArea+"</td></tr>";
+            //var c1 = "<input type='text' style='margin-left:100px;margin-right:5px;width:50px' id='retail_commission' value='0'>";
+            //c1= c1+ "<button type='button' style='margin-left:5px' onclick='' class='btn btn-default btn-xs'>确定</button>";
+            ihtml = ihtml + "<tr><td>返佣金额</td><td>"+(product[0].retail_commission?product[0].retail_commission:0)+"</td></tr>";
+            ihtml = ihtml + "<tr><td>产品类型</td><td>"+(product[0].type_id==1?"单船票":"团队游")+"</td></tr>";
+            ihtml = ihtml + "<tr><td>产品编号</td><td>"+product[0].product_number+"</td></tr>";
+            ihtml = ihtml + "<tr><td>供应商</td><td>"+product[0].short_name+"</td></tr>";
+            ihtml = ihtml + "<tr><td>出发日期</td><td>"+(new Date(product[0].start_date)).Format("yyyy-MM-dd")+"</td></tr>";
+            ihtml = ihtml + "<tr><td>航线</td><td id='cruiseline'>"+loading+"</td></tr>";
+            ihtml = ihtml + "<tr><td>签证截止日</td><td>"+(new Date(product[0].visa_application_until)).Format("yyyy-MM-dd")+"</td></tr>";
+            ihtml = ihtml + "<tr><td>产品卖点</td><td>"+(product[0].productfeature?product[0].productfeature:"")+"</td></tr>";
+            ihtml = ihtml + "<tr><td>优惠促销</td><td>"+(product[0].advertising?product[0].advertising:"")+"</td></tr>";
+            var Poster = ((product[0].advertising_img_url).indexOf("undefined")>0 || (product[0].advertising_img_url).indexOf(".")==-1)?"":"<img style='width:100%;' alt='没有图片'  src='"+product[0].imagepath+product[0].advertising_img_url+"''>";
+            ihtml = ihtml + "<tr><td>促销海报</td><td>"+Poster+"</td></tr>";
+            ihtml = ihtml + "</table>";
+            $("#p1").html(ihtml);
+            //加载航线信息
+            $.ajax({ type:"POST" , url: proname+"/getCruiseLine", data:{id:_id}, success: function(cl){
+                $("#cruiseline").html(cl);
+            }});     
+        }});
+    }
+</script>

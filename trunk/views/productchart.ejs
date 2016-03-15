@@ -1,0 +1,140 @@
+<table>
+    <tr>
+        <td>
+            <div class="btn-group">
+                <button type="button" class="btn btn-default dropdown-toggle"
+                        data-toggle="dropdown">
+                    在售产品统计 <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" role="menu">
+                    <li><a href="#" onclick="_getPieChart('getChart1','在售产品统计-按航区')">按航区</a></li>
+                    <li><a href="#" onclick="_getPieChart('getChart2','在售产品统计-按邮轮公司')">按邮轮公司</a></li>
+                    <li><a href="#" onclick="_getBarChart('getChart3','在售产品统计-按邮轮名称')">按邮轮名称</a></li>
+                    <li><a href="#" onclick="_getBarChart('getChart4','在售产品统计-按供应商')">按供应商</a></li>
+                </ul>
+            </div>
+            <div id="container1" style="min-width:1000px;height:500px" ></div>
+        </td>
+        <td style="vertical-align:top">
+            <button type="button" class="btn btn-default" onclick="setAcc()" />生成</button>
+            <span id="account"></span>
+        </td>
+    </tr>
+</table>
+<script>
+    function setAcc(){
+        var len = 9;
+        var $chars = 'ABCDEFGHJKMNPQRSTWXYZabcdefhijkmnprstwxyz2345678';
+        /****默认去掉了容易混淆的字符oOLl,9gq,Vv,Uu,I1****/
+        var maxPos = $chars.length;
+　　    var acc = '';
+　　    for (i = 0; i < len; i++) {
+　　　　    acc += $chars.charAt(Math.floor(Math.random() * maxPos));
+　　    } 
+        document.getElementById("account").innerHTML = acc;
+    }
+
+    var _tablename = "pchart";
+    $("#collapse4").attr("class","panel-collapse collapse in");
+    $("#collapse7_all").attr("class","panel-collapse collapse in");
+    $("#viewtable").html("");
+    function _getBarChart(url,title){
+        $.ajax({ type:"POST" ,url: _tablename+"/"+url,dataType:"json", success: function(data1) {
+            console.log(data1);
+            var jsonData = eval("(" + data1 + ")");
+            var t_arr = new Array();
+            var d_arr = new Array();
+            for(var i in jsonData){
+                console.log(jsonData[i].name+":"+jsonData[i].y);
+                t_arr[i] = jsonData[i].name;
+                d_arr[i] = jsonData[i].y;
+            }
+            $('#container1').highcharts({
+                chart: {
+                    type: 'column',
+                    margin: [ 50, 50, 100, 80]
+                },
+                title: {
+                    text: title
+                },
+                xAxis: {
+                    categories: t_arr,
+                    labels: {
+                        rotation: -45,
+                        align: 'right',
+                        style: {
+                            fontSize: '13px',
+                            fontFamily: 'Verdana, sans-serif'
+                        }
+                    }
+                },
+                yAxis: {
+                    min: 0,
+                    title: {
+                        text: '产品数量（个）'
+                    }
+                },
+                legend: {
+                    enabled: false
+                },
+                tooltip: {
+                    pointFormat: '产品数量: <b>{point.y}个 </b>'
+                },
+                series: [{
+                    name: 'Population',
+                    data: d_arr,
+                    dataLabels: {
+                        enabled: true,
+                        rotation: -90,
+                        color: '#FFFFFF',
+                        align: 'right',
+                        x: 4,
+                        y: 10,
+                        style: {
+                            fontSize: '13px',
+                            fontFamily: 'Verdana, sans-serif',
+                            textShadow: '0 0 3px black'
+                        }
+                    }
+                }]
+            });
+          }
+        });
+    }
+
+    function _getPieChart(url,title){
+        $.ajax({ type:"POST" ,url: _tablename+"/"+url,dataType:"json", success: function(data1){
+            console.log(data1);
+            $('#container1').highcharts({
+                chart: {
+                    plotBackgroundColor: null,
+                    plotBorderWidth: null,
+                    plotShadow: false
+                },
+                title: {
+                    text: title
+                },
+                tooltip: {
+                    pointFormat: '{series.name}: <b>{point.y}</b>'
+                },
+                plotOptions: {
+                    pie: {
+                        allowPointSelect: true,
+                        cursor: 'pointer',
+                        dataLabels: {
+                            enabled: true,
+                            format: '<b>{point.name}</b>: {point.percentage:.1f} %'
+                        },
+                        showInLegend: true
+                    }
+                },
+                series: [{
+                    type: 'pie',
+                    name: '数量',
+                    data: eval("(" + data1 + ")")
+                }]
+            });
+        }});
+    }
+
+</script>

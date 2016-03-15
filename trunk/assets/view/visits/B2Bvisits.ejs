@@ -1,0 +1,20 @@
+<%
+var l = log;
+var tmp = l.split("|");
+var a1 = tmp[0].split("@");
+var a2 = tmp[1].split("@");
+var a3 = tmp[2].split("@");
+var a4 = tmp[3].split("@");
+%>
+<table style='margin-top:5px;width:750px;' class='table table-striped table-bordered'>
+<tr><th>排名</th><th>用户名</th><th>公司</th><th>访问量(次)</th><th>最后访问时间</th></tr>
+<%for(var i=0;i<a1.length;i++){%>
+<tr>
+	<td><%=(i+1)%></td>
+	<td><%=a1[i]%></td>
+	<td><%=a4[i]%></td>
+	<td><%=a2[i]%></td>
+	<td><%=a3[i]%></td>
+</tr>
+<%}%>
+</table>

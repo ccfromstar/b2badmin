@@ -1,0 +1,86 @@
+<script type="text/javascript">
+  var currentPage = 1;
+  var userTotal = 0;
+  var totalPages = 0;
+  var maxItem = 10;// max displayed items for one page
+  function addUser(companyId, user){
+    $('#user-list-'+companyId).append( '<div id="user-'+user.id+'">' + user.name + '</div>' );
+  }
+  function addCompany(company){
+    $('#company-list').append( '<div id="company-'+company.id+'">'+
+      '<h><b>' + company.name + '</b></h>'+
+      '<div id="user-list-'+company.id+'"></div>' +
+    '</div>');
+  }
+  function updatePaging(){
+    document.getElementById('current-page').value = currentPage;
+    document.getElementById('total-page').innerHTML = ''
+    $('#total-page').append(totalPages);
+  }
+  function onPageValueChanged(){
+    var page =  parseInt(document.getElementById("current-page").value);
+    if ( page > 0 && page <= totalPages ) {
+      currentPage = page;
+      loadPage(currentPage);
+    }
+  }
+  function onPreviousPageClicked(){
+//    console.log(totalPages + ': ' + currentPage);
+    if ( currentPage > 1 ) {
+      currentPage--;
+      loadPage(currentPage);
+    }
+  }
+  function onNextPageClicked() {
+//    console.log(totalPages + ': ' + currentPage);
+    if ( currentPage < totalPages ) {
+      currentPage++;
+      loadPage(currentPage);
+    }
+  }
+
+  function loadPage(pageNum){
+    io.socket.get('/userlist/getAll', {page:pageNum}, function(data) {
+      document.getElementById('company-list').innerHTML = '';
+      for(var i in data.list){
+        addCompany(data.list[i].company);
+        for(var u in data.list[i].users){
+          addUser(data.list[i].company.id, data.list[i].users[u]);
+        }
+      }
+      updatePaging();
+    });
+  }
+
+  function load(){
+    io.socket.get('/userlist/getAll', function(data) {
+      userTotal = data.userTotal;
+      totalPages = Math.ceil(userTotal/maxItem);
+      totalPages = (totalPages>1?totalPages-1:totalPages);
+      updatePaging();
+      for(var i in data.list){
+        addCompany(data.list[i].company);
+        for(var u in data.list[i].users){
+          addUser(data.list[i].company.id, data.list[i].users[u]);
+        }
+      }
+    });
+  }
+
+  load();
+  
+</script>
+
+<div style="width:1000px">
+  <div id="company-list"></div>
+
+  <table id="paging" style="width: 100%">
+    <tr>
+      <td style="text-align: center;font-size: 12px;"><img src="images/previours_page.png" style="cursor: pointer;margin-bottom:-5px" onclick="onPreviousPageClicked()" title="上一页"/>
+        &nbsp;第&nbsp;<input style="width: 25px;text-align: center" type="text" id="current-page" value="1" onchange="onPageValueChanged()" />&nbsp;页
+        &nbsp;共<span id="total-page"></span>页
+        <img src="images/next_page.png" style="margin-bottom:-5px;padding-left: 5px;cursor: pointer" onclick="onNextPageClicked()" title="下一页"/></td>
+    </tr>
+  </table>
+</div>
+

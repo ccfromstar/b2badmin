@@ -1,0 +1,87 @@
+<script>
+    var _tablename = "allexcela";
+    $("#collapse17").attr("class","panel-collapse collapse in");
+    $("#collapse9_all").attr("class","panel-collapse collapse in");
+   
+    function _newForm(){
+        $.ajax({ type:"POST" , url: "allexcela/insert", data:{
+                name:$("#cname").val(),
+                company:$("#company").val(),
+                department:$("#department").val(),
+                position:$("#position").val(),
+                m_telephone:$("#m_telephone").val(),
+                address:$("#address").val(),
+                type:$("#type").val(),
+                user_id:$("#n_user_id").val(),
+                }, success: function(data){
+                    if(data==200){
+                        $("#content_info").html("新建成功！");
+                        $('#infoModal').modal('show');
+                        $('#addModal').modal('hide');
+                        $("#refresh").trigger("click");
+                    }
+        }});
+    }
+</script>
+
+<div class="modal fade" data-backdrop="static" id="addModal" tabindex="-1" role="dialog" 
+   aria-labelledby="myModalLabel2" aria-hidden="true">
+   <div class="modal-dialog" id="_dialogstyle" style="width:600px">
+      <div class="modal-content">
+         <div class="modal-header">
+            <button type="button" class="close" 
+               data-dismiss="modal" aria-hidden="true">
+                  &times;
+            </button>
+            <div class="modal-title" id="myModalLabel">新建客户信息</div>
+         </div>
+         <div class="modal-body">
+             <table class="table table-bordered">
+                <tr>
+                    <td>姓名</td>
+                    <td><input type="text" class="input-sm form-control" id="cname"></input></td>
+                </tr>   
+                <tr>
+                    <td>公司</td>
+                    <td><input type="text" class="input-sm form-control" id="company"></input></td>
+                </tr>
+                <tr>
+                    <td>部门</td>
+                    <td><input type="text" class="input-sm form-control" id="department"></textarea></td>
+                </tr>
+                <tr>
+                    <td>职位</td>
+                    <td><input type="text" class="input-sm form-control" id="position" ></input></td>
+                </tr>
+               	<tr>
+                    <td>电话</td>
+                    <td><input type="text" class="input-sm form-control" id="m_telephone" ></input></td>
+                </tr>
+                <tr>
+                    <td>地址</td>
+                    <td><input type="text" class="input-sm form-control" id="address" ></input></td>
+                </tr>
+                <tr>
+                    <td>类型</td>
+                    <td><input type="text" class="input-sm form-control" id="type" ></input></td>
+                </tr>
+                <tr>
+                    <td>录入人ID</td>
+                    <td><input type="text" class="input-sm form-control" id="n_user_id"  disabled ></input></td>
+                </tr>
+                <tr>
+                    <td>时间</td>
+                    <td><input type="text" class="input-sm form-control" id="n_time" disabled ></input></td>
+                </tr>
+             </table>
+         </div>
+         <div class="modal-footer" id="_footer">
+            <button type="button" class="btn btn-default btn-xs" onclick="_newForm()">提交
+            </button>
+            <button type="button" class="btn btn-default btn-xs" 
+               data-dismiss="modal">关闭
+            </button>
+         </div>
+      </div><!-- /.modal-content -->
+    </div>
+</div><!-- /.modal -->

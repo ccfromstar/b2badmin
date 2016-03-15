@@ -1,0 +1,66 @@
+<%
+Date.prototype.Format = function(fmt)   
+{ //author: meizz   
+  var o = {   
+    "M+" : (this.getMonth()+1).length==1?"0"+this.getMonth()+1:this.getMonth()+1,                 //月份   
+    "d+" : this.getDate(),                    //日   
+    "h+" : this.getHours(),                   //小时   
+    "m+" : this.getMinutes(),                 //分   
+    "s+" : this.getSeconds(),                 //秒   
+    "q+" : Math.floor((this.getMonth()+3)/3), //季度   
+    "S"  : this.getMilliseconds()             //毫秒   
+  };   
+  if(/(y+)/.test(fmt))   
+    fmt=fmt.replace(RegExp.$1, (this.getFullYear()+"").substr(4 - RegExp.$1.length));   
+  for(var k in o)   
+    if(new RegExp("("+ k +")").test(fmt))   
+  fmt = fmt.replace(RegExp.$1, (RegExp.$1.length==1) ? (o[k]) : (("00"+ o[k]).substr((""+ o[k]).length)));   
+  return fmt;   
+}  
+
+var bookingno = (new Date()).Format("yyMMdd");
+var Num=""; 
+for(var i=0;i<4;i++) 
+{ 
+Num+=Math.floor(Math.random()*10); 
+}
+bookingno = bookingno + Num;
+%>
+<table style='margin-top:5px;width:400px;' class='table table-striped table-bordered'>
+<tr>
+	<td style="width:120px;vertical-align:middle">商户开户分行号<td><input class="input-sm form-control" id="BranchID" value="0021" disabled />
+	<tr>
+	<td style="vertical-align:middle">商户号<td><input class="input-sm form-control" id="CoNo" value="005208" disabled />
+	<tr>
+	<td style="vertical-align:middle">定单号<td><input class="input-sm form-control" id="BillNo" value="<%=bookingno%>" disabled />
+	<tr>
+	<td style="vertical-align:middle">定单总金额（元）<td><input class="input-sm form-control" id="Amount" onkeyup="this.value=this.value.replace(/\D/g,'')" value="0" onafterpaste="this.value=this.value.replace(/\D/g,'')">
+	<tr>
+	<td style="vertical-align:middle">交易日期<td><input class="input-sm form-control" id="DatePay" value="<%=(new Date()).Format("yyyyMMdd")%>" disabled />
+	<tr>
+	<td style="vertical-align:middle">备注<td><textarea class="input-sm form-control" id="remark" rows="3"></textarea>
+	<tr>
+	<td><input type="button" onclick="createCMB()" value="生成支付链接"><td><div id="payurl"></div>
+</table>
+<script>
+//alert(navigator.userAgent);
+$("#viewtable").css("display","none");
+
+function createCMB(){
+	$.ajax({ type:"POST" , url: "common/createCMB", data:{
+                BillNo:$("#BillNo").val(),
+                Amount:$("#Amount").val(),
+                DatePay:$("#DatePay").val(),
+                remark:$("#remark").val()
+            	}, success: function(data){
+                    if(data==200){
+                        $("#content_info").html("生成成功！");
+                        $('#infoModal').modal('show');
+                  		//create url
+                		var urls = "http://www.youlunshidai.com/cbmpay?billno="+$("#BillNo").val();
+                		$("#payurl").html(urls);
+                    }
+    }});
+}
+</script>
+    

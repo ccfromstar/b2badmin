@@ -1,0 +1,23 @@
+<script>
+    function _newForm(){
+        if($("#n_filename_1").val()==""){
+            $("#content_info").html("文件名不能为空！");
+            $('#infoModal').modal('show');
+            return false;
+        }
+    	document.forms[0].submit();
+    }
+</script>
+
+         <form method="post" enctype="multipart/form-data" action="/file/insertFile">
+             <table class="table table-bordered">
+             	<tr>
+             		<td>文件上传</td>
+             		<td>
+                        <input type="file" multiple="multiple" name="avatar" ></input>
+                    </td>
+             	</tr>	
+             </table>
+             <button type="button" class="btn btn-default btn-xs" onclick="_newForm()">提交
+            </button>
+        </form>
