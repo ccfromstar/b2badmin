@@ -8,8 +8,8 @@ function _sendMail(sender, subject, mailContent, mailOptions, callback) {
         secureConnection: false, // 使用 SSL
         port: 25, // SMTP 端口
         auth: {
-            user: "service@huiyoulun.com", // 账号
-            pass: "hyl123" // 密码
+            user: "", // 账号
+            pass: "" // 密码
         }
     });
 
