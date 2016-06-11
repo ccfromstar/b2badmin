@@ -43,7 +43,7 @@ module.exports.connections = {
   mysqlB2B: {
     adapter: 'sails-mysql',
     //host: 'localhost',
-    host: '117.121.25.131',
+    host: '127.0.0.1',
     user: 'root',
     password: 'password123',
     database: 'cds_b2b1'
@@ -52,7 +52,7 @@ module.exports.connections = {
   mysqlB2C: {
     adapter: 'sails-mysql',
     //host: 'localhost',
-    host: '117.121.25.131',
+    host: '127.0.0.1',
     user: 'root',
     password: 'password123',
     database: 'cds_basicinfo'
